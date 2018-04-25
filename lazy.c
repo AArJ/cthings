@@ -25,6 +25,7 @@ int main(int argc, char **argv) {
     args[1] = s;
     args[3] = o;
     execv("/bin/as", args);
+    //Figure out how to get here, don't want to exit
     printf("lol\n");
   }
  
