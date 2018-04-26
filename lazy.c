@@ -46,7 +46,10 @@ int main(int argc, char **argv) {
   char *args[argn];
   args[0] = "/bin/ld";
   for (int i = 1; i < (argn - 1); i++) {
-    args[i] = *(argv + i);
+    printf("%s\n", *(argv + i));
+    snprintf(s, 490, "%s.o", *(argv + i));
+    printf("%s\n", s);
+    args[i] = s;
   }
   args[argn - 2] = "-o";
   args[argn - 1] = output;
