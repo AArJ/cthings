@@ -4,7 +4,7 @@
 #include <string.h>
 
 int main(int argc, char **argv) {
-  int c = argc - 3
+  int c = argc - 3;
   int argn;
   char *output;
   char s[500];
@@ -42,10 +42,16 @@ int main(int argc, char **argv) {
       return 2;
     }
   }
+  printf("%s\n", output);
   char *args[argn];
   args[0] = "/bin/ld";
   for (int i = 1; i < (argn - 1); i++) {
-    args[i] = 
+    args[i] = *(argv + i);
+  }
+  args[argn - 2] = "-o";
+  args[argn - 1] = output;
+  for (int i = 0; i < argn; i++) {
+    printf("%s\n", args[i]);
   }
   return 0;
 }
