@@ -5,35 +5,42 @@
 
 int main(int argc, char **argv) {
   int c;
-  char s[50];
-  char o[50];
-  char *args[5];
-  args[0] = "/bin/as";
-  args[2] = "-o";
-  args[5] = NULL;
+  char output[500];
+  char s[500];
   if (argc == 1) {
     printf("Please specify a program\n");
     return 1;
   }
-
+  while ((c = getopt(argc, argv, "o:h")) != -1) {
+    if (c == 'h') {
+      printf("help\n");
+      return 0;
+    }
+    if (c == 'o') {
+      char *utput = optarg;
+      output = utput;
+    }
+  }
   for (int i = 1; i < argc; i++) {
-    if ((strcmp(*(argv + i), "-o") == 0) && (i < (argc - 2))) {
+    if ((strcmp(*(argv + i), "-o") == 0)) {
       i += 2;
     }
-    snprintf(s, 40, "%s.s", *(argv + i));
-    snprintf(o, 40, "%s.o", *(argv + i));
-    args[1] = s;
-    args[3] = o;
-    execv("/bin/as", args);
-    //Figure out how to get here, don't want to exit
-    printf("lol\n");
+    if (i >= argc) {
+      break;
+    }
+    snprintf(s, 490, "as %s.s -o %s.o", *(argv + i), *(argv + i));
+    if (system(s) != 0) {
+      printf("Something went wrong with assembly\n");
+      system("rm *.o");
+      return 2;
+    }
   }
  
-  while ((c = getopt(argc, argv, "o:")) != -1) {
+  /*while ((c = getopt(argc, argv, "o:")) != -1) {
     if (c == 'o') {
       printf("%s\n", optarg);
     }
-  }
-
+  }i*/
+  printf("%s\n", output);
   return 0;
 }
