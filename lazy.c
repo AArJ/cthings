@@ -4,8 +4,9 @@
 #include <string.h>
 
 int main(int argc, char **argv) {
-  int c;
-  char output[500];
+  int c = argc - 3
+  int argn;
+  char *output;
   char s[500];
   if (argc == 1) {
     printf("Please specify a program\n");
@@ -17,9 +18,15 @@ int main(int argc, char **argv) {
       return 0;
     }
     if (c == 'o') {
-      char *utput = optarg;
-      output = utput;
+      output = optarg;
+      c = 0;
+      break;
     }
+  }
+  argn = argc;
+  if (c != 0) {
+    output = *(argv + 1);
+    argn = argc + 2;
   }
   for (int i = 1; i < argc; i++) {
     if ((strcmp(*(argv + i), "-o") == 0)) {
@@ -31,16 +38,14 @@ int main(int argc, char **argv) {
     snprintf(s, 490, "as %s.s -o %s.o", *(argv + i), *(argv + i));
     if (system(s) != 0) {
       printf("Something went wrong with assembly\n");
-      system("rm *.o");
+      system("rm *.o &> /dev/null");
       return 2;
     }
   }
- 
-  /*while ((c = getopt(argc, argv, "o:")) != -1) {
-    if (c == 'o') {
-      printf("%s\n", optarg);
-    }
-  }i*/
-  printf("%s\n", output);
+  char *args[argn];
+  args[0] = "/bin/ld";
+  for (int i = 1; i < (argn - 1); i++) {
+    args[i] = 
+  }
   return 0;
 }
