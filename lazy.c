@@ -9,6 +9,10 @@ int main(int argc, char **argv) {
   char *output;
   char s[500];
   char *ss[argc];
+  for (int i = 0; i < argc; i++) {
+    char asdf[50];
+    ss[i] = asdf;
+  }
   if (argc == 1) {
     printf("Please specify a program\n");
     return 1;
@@ -48,9 +52,10 @@ int main(int argc, char **argv) {
   args[0] = "/bin/ld";
   for (int i = 1; i < (argn - 1); i++) {
     printf("%s\n", *(argv + i));
-    snprintf(s, 490, "%s.o", *(argv + i));
-    ss[i] = s;
-    printf("%s\n", s);
+    snprintf(args[i], 490, "%s.o", *(argv + i));
+    //strncpy(ss[i], s, 49);
+    //ss[i] = s;
+    printf("%s\n", args[i]);
     args[i] = ss[i];
   }
   args[argn - 2] = "-o";
