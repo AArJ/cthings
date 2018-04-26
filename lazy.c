@@ -8,6 +8,7 @@ int main(int argc, char **argv) {
   int argn;
   char *output;
   char s[500];
+  char *ss[argc];
   if (argc == 1) {
     printf("Please specify a program\n");
     return 1;
@@ -48,8 +49,9 @@ int main(int argc, char **argv) {
   for (int i = 1; i < (argn - 1); i++) {
     printf("%s\n", *(argv + i));
     snprintf(s, 490, "%s.o", *(argv + i));
+    ss[i] = s;
     printf("%s\n", s);
-    args[i] = s;
+    args[i] = ss[i];
   }
   args[argn - 2] = "-o";
   args[argn - 1] = output;
