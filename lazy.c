@@ -52,11 +52,11 @@ int main(int argc, char **argv) {
   args[0] = "/bin/ld";
   for (int i = 1; i < (argn - 1); i++) {
     printf("%s\n", *(argv + i));
-    snprintf(args[i], 490, "%s.o", *(argv + i));
+    snprintf(s, 490, "%s.o", *(argv + i));
     //strncpy(ss[i], s, 49);
     //ss[i] = s;
     printf("%s\n", args[i]);
-    args[i] = ss[i];
+    args[i] = s;
   }
   args[argn - 2] = "-o";
   args[argn - 1] = output;
@@ -65,3 +65,4 @@ int main(int argc, char **argv) {
   }
   return 0;
 }
+
