@@ -47,21 +47,37 @@ int main(int argc, char **argv) {
       return 2;
     }
   }
-  printf("%s\n", output);
+  int check;
+  int size;
   char *args[argn];
   args[0] = "/bin/ld";
-  for (int i = 1; i < (argn - 1); i++) {
-    printf("%s\n", *(argv + i));
-    snprintf(s, 490, "%s.o", *(argv + i));
-    //strncpy(ss[i], s, 49);
-    //ss[i] = s;
-    printf("%s\n", args[i]);
-    args[i] = s;
+  for (int i = 1; i < argc; i++) {
+    if ((strcmp(*(argv + i), "-o") == 0)) {
+      i += 2;
+    }
+    if (i >= argc) {
+      break;
+    }
+    size = snprintf(NULL, 0, "as %s.s -o %s.o", argv[i], argv[i]);
+    if (size < 0) {
+      printf("Something really went wrong (snprintf)\n");
+      return 1;
+    }
+    args[i] = malloc(++size);
+    if (args[i] == NULL) {
+      printf("Something really went wrong (malloc)\n");
+      return 1;
+    }
+    check = snprintf(args[i], size, "%s.o", argv[i]);
+    if (check < 0) {
+      printf("Something really went wrong (2nd snprintf)\n");
+    }
+    printf("%i: %i\n", i, size);
   }
   args[argn - 2] = "-o";
   args[argn - 1] = output;
   for (int i = 0; i < argn; i++) {
-    printf("%s\n", args[i]);
+    printf("args[%i]: %s\n", i, args[i]);
   }
   return 0;
 }
