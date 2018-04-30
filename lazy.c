@@ -4,11 +4,13 @@
 #include <string.h>
 #include <sys/wait.h>
 
+//TODO: Get all errors to remove object files
 int main(int argc, char **argv) {
   int c = argc - 3;
   int argn;
+  char *point;
   char *output;
-  char s[500];
+  //char s[500];
   if (argc == 1) {
     printf("Please specify a program\n");
     return 1;
@@ -43,8 +45,8 @@ int main(int argc, char **argv) {
       printf("Something really went wrong\n");
       return 1;
     }
-    args[i] = malloc(++size);
-    if (args[i] == NULL) {
+    point = malloc(++size);
+    if (point == NULL) {
       printf("Something really went wrong\n");
       return 1;
     }
@@ -57,9 +59,11 @@ int main(int argc, char **argv) {
     //snprintf(s, 490, "as %s.s -o %s.o", *(argv + i), *(argv + i));
     if (system(point) != 0) {
       printf("Something went wrong with assembly\n");
+      free(point);
       system("rm *.o &> /dev/null");
       return 2;
     }
+    free(point);
   }
   int check;
   int size;
