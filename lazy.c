@@ -36,8 +36,26 @@ int main(int argc, char **argv) {
     if (i >= argc) {
       break;
     }
-    snprintf(s, 490, "as %s.s -o %s.o", *(argv + i), *(argv + i));
-    if (system(s) != 0) {
+    int check;
+    int size;
+    size = snprintf(NULL, 0, "as %s.s -o %s.o", argv[i], argv[i]);
+    if (size < 0) {
+      printf("Something really went wrong\n");
+      return 1;
+    }
+    args[i] = malloc(++size);
+    if (args[i] == NULL) {
+      printf("Something really went wrong\n");
+      return 1;
+    }
+    check = snprintf(point, size, "as %s.s -o %s.o", argv[i], argv[i]);
+    if (check < 0) {
+      printf("Something really went wrong\n");
+      return 1;
+    }
+    //Start the assembly
+    //snprintf(s, 490, "as %s.s -o %s.o", *(argv + i), *(argv + i));
+    if (system(point) != 0) {
       printf("Something went wrong with assembly\n");
       system("rm *.o &> /dev/null");
       return 2;
@@ -54,7 +72,7 @@ int main(int argc, char **argv) {
     if (i >= argc) {
       break;
     }
-    size = snprintf(NULL, 0, "as %s.s -o %s.o", argv[i], argv[i]);
+    size = snprintf(NULL, 0, "%s.o", argv[i]);
     if (size < 0) {
       printf("Something really went wrong\n");
       return 1;
