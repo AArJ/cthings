@@ -62,6 +62,8 @@ int main(int argc, char **argv) {
       free(point);
       system("rm *.o &> /dev/null");
       return 2;
+    } else {
+      printf("%s\n", point);
     }
     free(point);
   }
@@ -96,6 +98,10 @@ int main(int argc, char **argv) {
   args[argn - 2] = output;
   args[argn - 1] = NULL;
   
+  for (int i = 0; i < argn; i++) {
+    printf("%s ", args[i]);
+  }
+  printf("\n");
   pid_t proc;
   proc = fork();
   if (proc < 0) {
@@ -109,6 +115,6 @@ int main(int argc, char **argv) {
   for (int i = 1; i < (argn - 3); i++) {
     free(args[i]);
   }
-  system("rm *.o &> /dev/null");
+  //system("rm *.o &> /dev/null");
   return 0;
 }
