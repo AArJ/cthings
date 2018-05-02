@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -56,21 +57,18 @@ int main(int argc, char **argv) {
       return 1;
     }
     //Start the assembly
-    //snprintf(s, 490, "as %s.s -o %s.o", *(argv + i), *(argv + i));
     if (system(point) != 0) {
       printf("Something went wrong with assembly\n");
       free(point);
       system("rm *.o &> /dev/null");
       return 2;
-    } else {
-      printf("%s\n", point);
-    }
+    } 
     free(point);
   }
   int check;
   int size;
   char *args[argn];
-  args[0] = "/bin/ld";
+  args[0] = "/usr/bin/ld";
   for (int i = 1; i < argc; i++) {
     if ((strcmp(*(argv + i), "-o") == 0)) {
       i += 2;
@@ -97,18 +95,15 @@ int main(int argc, char **argv) {
   args[argn - 3] = "-o";
   args[argn - 2] = output;
   args[argn - 1] = NULL;
-  for (int i = 0; i < argn; i++) {
-    printf("%s ", args[i]);
-  }
-  printf("\n");
   pid_t proc;
   proc = fork();
   if (proc < 0) {
     printf("Something really went wrong\n");
     return 1;
   } else if (proc == 0) {
-    printf("trying to execv!\n");
-    execv("/bin/ld", args);
+    if (execv("/usr/bin/ld", args)) {
+      printf("errno: %i\n", errno);  
+    }
     exit(1);
   } else {
     wait(NULL);
