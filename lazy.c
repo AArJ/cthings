@@ -97,7 +97,6 @@ int main(int argc, char **argv) {
   args[argn - 3] = "-o";
   args[argn - 2] = output;
   args[argn - 1] = NULL;
-  
   for (int i = 0; i < argn; i++) {
     printf("%s ", args[i]);
   }
@@ -108,13 +107,15 @@ int main(int argc, char **argv) {
     printf("Something really went wrong\n");
     return 1;
   } else if (proc == 0) {
+    printf("trying to execv!\n");
     execv("/bin/ld", args);
+    exit(1);
   } else {
     wait(NULL);
   }
   for (int i = 1; i < (argn - 3); i++) {
     free(args[i]);
   }
-  //system("rm *.o &> /dev/null");
+  system("rm *.o &> /dev/null");
   return 0;
 }
