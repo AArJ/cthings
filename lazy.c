@@ -7,6 +7,7 @@
 
 //TODO: Get all errors to remove object files
 int main(int argc, char **argv) {
+  int debug = 0;
   int c = argc - 3;
   int argn;
   char *point;
@@ -16,7 +17,7 @@ int main(int argc, char **argv) {
     printf("Please specify a program\n");
     return 1;
   }
-  while ((c = getopt(argc, argv, "o:h")) != -1) {
+  while ((c = getopt(argc, argv, "d:o:h")) != -1) {
     if (c == 'h') {
       printf("help\n");
       return 0;
@@ -25,6 +26,9 @@ int main(int argc, char **argv) {
       output = optarg;
       c = 0;
       break;
+    }
+    if (c == 'd') {
+      debug = 1;
     }
   }
   argn = argc + 1;
@@ -35,6 +39,12 @@ int main(int argc, char **argv) {
   for (int i = 1; i < argc; i++) {
     if ((strcmp(*(argv + i), "-o") == 0)) {
       i += 2;
+    }
+    if (i >= argc) {
+      break;
+    }
+    if ((strcmp(*(argv + i), "-d") == 0)) {
+      i++;
     }
     if (i >= argc) {
       break;
@@ -63,15 +73,25 @@ int main(int argc, char **argv) {
       system("rm *.o &> /dev/null");
       return 2;
     } 
+    if (debug) {
+      printf("%s\n", point);
+    }
     free(point);
   }
   int check;
   int size;
   char *args[argn];
+  int index = 1;
   args[0] = "/usr/bin/ld";
   for (int i = 1; i < argc; i++) {
     if ((strcmp(*(argv + i), "-o") == 0)) {
       i += 2;
+    }
+    if (i >= argc) {
+      break;
+    }
+    if ((strcmp(*(argv + i), "-d") == 0)) {
+      i++;
     }
     if (i >= argc) {
       break;
@@ -81,20 +101,27 @@ int main(int argc, char **argv) {
       printf("Something really went wrong\n");
       return 1;
     }
-    args[i] = malloc(++size);
-    if (args[i] == NULL) {
+    args[index] = malloc(++size);
+    if (args[index] == NULL) {
       printf("Something really went wrong\n");
       return 1;
     }
-    check = snprintf(args[i], size, "%s.o", argv[i]);
+    check = snprintf(args[index], size, "%s.o", argv[i]);
     if (check < 0) {
       printf("Something really went wrong\n");
       return 1;
     }
+    index++;
   }
   args[argn - 3] = "-o";
   args[argn - 2] = output;
   args[argn - 1] = NULL;
+  if (debug) {
+    for (int i = 0; i < argn; i++) {
+      printf("%s ", args[i]);
+    }
+    printf("\n");
+  }
   pid_t proc;
   proc = fork();
   if (proc < 0) {
