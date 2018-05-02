@@ -9,7 +9,7 @@
 int main(int argc, char **argv) {
   int debug = 0;
   int c = argc - 3;
-  int argn;
+  int argn = argc + 1;
   char *point;
   char *output;
   //char s[500];
@@ -29,9 +29,9 @@ int main(int argc, char **argv) {
     }
     if (c == 'd') {
       debug = 1;
+      argn--;
     }
   }
-  argn = argc + 1;
   if (c != 0) {
     output = *(argv + 1);
     argn = argc + 3;
