@@ -12,7 +12,6 @@ int main(int argc, char **argv) {
   int argn = argc + 1;
   char *point;
   char *output;
-  //char s[500];
   if (argc == 1) {
     printf("Please specify a program\n");
     return 1;
@@ -21,13 +20,10 @@ int main(int argc, char **argv) {
     if (c == 'h') {
       printf("help\n");
       return 0;
-    }
-    if (c == 'o') {
+    } else if (c == 'o') {
       output = optarg;
       c = 0;
-      break;
-    }
-    if (c == 'd') {
+    } else if (c == 'd') {
       debug = 1;
       argn--;
     }
@@ -106,8 +102,8 @@ int main(int argc, char **argv) {
       printf("Something really went wrong\n");
       return 1;
     }
-    check = snprintf(args[index], size, "%s.o", argv[i]);
-    if (check < 0) {
+    //check = snprintf(args[index], size, "%s.o", argv[i]);
+    if (snprintf(args[index], size, "%s.o", argv[i]) < 0) {
       printf("Something really went wrong\n");
       return 1;
     }
