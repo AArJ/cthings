@@ -7,11 +7,12 @@
 
 //TODO: Get all errors to remove object files
 int main(int argc, char **argv) {
-  int debug = 0;
-  int c = argc - 3;
+  int c;
   int argn = argc + 1;
   char *point;
   char *output;
+  int size; 
+  int check;
   if (argc == 1) {
     printf("Please specify a program\n");
     return 1;
@@ -22,17 +23,14 @@ int main(int argc, char **argv) {
       return 0;
     } else if (c == 'o') {
       output = optarg;
-      c = 0;
-    } else if (c == 'd') {
-      debug = 1;
-      argn--;
-    }
+    } 
   }
-  if (c != 0) {
+  if (strcmp(output, "") == 0) {
     output = *(argv + 1);
     argn = argc + 3;
   }
   for (int i = 1; i < argc; i++) {
+    //Make a string for the assembler
     if ((strcmp(*(argv + i), "-o") == 0)) {
       i += 2;
     }
@@ -45,8 +43,6 @@ int main(int argc, char **argv) {
     if (i >= argc) {
       break;
     }
-    int check;
-    int size;
     size = snprintf(NULL, 0, "as %s.s -o %s.o", argv[i], argv[i]);
     if (size < 0) {
       printf("Something really went wrong\n");
@@ -62,6 +58,7 @@ int main(int argc, char **argv) {
       printf("Something really went wrong\n");
       return 1;
     }
+
     //Start the assembly
     if (system(point) != 0) {
       printf("Something went wrong with assembly\n");
@@ -69,25 +66,16 @@ int main(int argc, char **argv) {
       system("rm *.o &> /dev/null");
       return 2;
     } 
-    if (debug) {
-      printf("%s\n", point);
-    }
     free(point);
   }
-  int check;
-  int size;
+
+  //Fill the array
   char *args[argn];
   int index = 1;
   args[0] = "/usr/bin/ld";
   for (int i = 1; i < argc; i++) {
     if ((strcmp(*(argv + i), "-o") == 0)) {
       i += 2;
-    }
-    if (i >= argc) {
-      break;
-    }
-    if ((strcmp(*(argv + i), "-d") == 0)) {
-      i++;
     }
     if (i >= argc) {
       break;
@@ -102,7 +90,6 @@ int main(int argc, char **argv) {
       printf("Something really went wrong\n");
       return 1;
     }
-    //check = snprintf(args[index], size, "%s.o", argv[i]);
     if (snprintf(args[index], size, "%s.o", argv[i]) < 0) {
       printf("Something really went wrong\n");
       return 1;
@@ -112,12 +99,8 @@ int main(int argc, char **argv) {
   args[argn - 3] = "-o";
   args[argn - 2] = output;
   args[argn - 1] = NULL;
-  if (debug) {
-    for (int i = 0; i < argn; i++) {
-      printf("%s ", args[i]);
-    }
-    printf("\n");
-  }
+  
+  //Link it
   pid_t proc;
   proc = fork();
   if (proc < 0) {
